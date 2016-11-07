@@ -1,7 +1,7 @@
 package com.hw3.Actors
 
 import akka.actor.Actor
-import com.hw3.Patterns.Messages.{ProcessResult, _}
+import com.hw3.Patterns.Messages._
 import com.hw3.Utils._
 
 import scala.concurrent._
@@ -62,8 +62,8 @@ class ProcessActor extends Actor {
             println("generate a .udb file")
             val outFile = s"$resourceDir/$id/$name.udb"
             val sourceDir = s"$resourceDir/$id/$name"
-            println(s"generating $resourceDir/$id/$name.udb")
 
+            println(s"generating $resourceDir/$id/$name.udb")
             Future {
                 UDBResult(
                     s"und -db $outFile create -languages $lang add $sourceDir analyze".run.exitValue
