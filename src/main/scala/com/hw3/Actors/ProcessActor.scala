@@ -62,14 +62,12 @@ class ProcessActor extends Actor {
             println("generate a .udb file")
             val outFile = s"$resourceDir/$id/$name.udb"
             val sourceDir = s"$resourceDir/$id/$name"
-            val success = {
-                s"echo generating $resourceDir/$id/$name.udb"
+            s"echo generating $resourceDir/$id/$name.udb"
             Future {
                 UDBResult(
                     s"und -db $outFile create -languages $lang add $sourceDir analyze".run.exitValue
                 )
             }.pipeTo(sender)
-            sender ! UDBResult(success)
         }
     }
 }
