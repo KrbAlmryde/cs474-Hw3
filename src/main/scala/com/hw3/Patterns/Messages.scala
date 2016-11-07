@@ -30,10 +30,14 @@ object Messages {
 
     // Replies containing results of operations
     case class JsonResult(json:JValue)
-    case class CloneResult(success:Int)
-    case class CleanResult(success: Int)
-    case class UDBResult(success:Int)
     case class FinalOutput(result:String)  // Should be used
+
+    abstract class ProcessResult
+    case class CloneResult(success:Int) extends ProcessResult
+    case class CleanResult(success: Int)  extends ProcessResult
+    case class UDBResult(success:Int) extends ProcessResult
+
+
 
     // Placeholder
     case class Foo(id:String, name:String, language:String, foo:String)
