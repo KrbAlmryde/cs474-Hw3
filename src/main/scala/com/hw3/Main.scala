@@ -25,7 +25,7 @@ object Main extends App {
 
     val masterActor = system.actorOf(Props[MasterActor], name = "master")
 
-    masterActor ! Language("Java")
+    masterActor ! Language("Python")
 
     //     Sleep for a moment
     Thread.sleep(200000)

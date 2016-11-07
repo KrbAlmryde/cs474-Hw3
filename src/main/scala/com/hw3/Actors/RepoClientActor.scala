@@ -1,8 +1,8 @@
 package com.hw3.Actors
 
 import akka.actor.{Actor, Props}
-import com.hw3.Patterns.JsonProtocol.{Repo, RepoDetails}
-import com.hw3.Patterns.Messages.{Content, JsonResult, Search}
+import com.hw3.Patterns.JsonProtocol.Repo
+import com.hw3.Patterns.Messages.{JsonResult, RepoDetails}
 
 /**
   * Created by krbalmryde on 11/2/16.
@@ -22,7 +22,7 @@ class RepoClientActor extends Actor{
             val id = repo.id.toString()
             val lang = repo.language.get
 
-            undActor ! RepoDetails(name, url, id, lang)
+            undActor ! RepoDetails(id, name, url, lang)
         }
 
         case JsonResult(content) => {

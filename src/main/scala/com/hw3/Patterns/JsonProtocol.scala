@@ -15,7 +15,6 @@ object JsonProtocol {
     implicit val formats = DefaultFormats // Brings in default date formats etc.
 
     case class URL(path:Option[String])
-    case class RepoDetails(name:String, url:String, id:String, lang:String) // Simple example
     case class CloneURL(clone_url:String)
 
     case class SearchResult(

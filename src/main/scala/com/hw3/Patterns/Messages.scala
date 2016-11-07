@@ -33,13 +33,16 @@ object Messages {
     case class UDBResult(success:Int)
     case class FinalOutput(result:String)  // Should be used
 
+    // Placeholder
+    case class Foo(id:String, name:String, language:String, foo:String)
 
     // When Its time to generate the .UDB file, send this message
-    case class UDB(id:String, language:String, path:String)
-
     case class DepGraph(id:String, name:String)
+    case class UDB(id:String, name:String, language:String)
+    case class RepoDetails(id:String, name:String, url:String, lang:String) // Simple example
+
     // In order to clone a Repo, send this request message
-    case class CloneRepo(id:String, url:String, path:String)
+    case class CloneRepo(id:String, name:String, url:String)
     case class CleanRepo(id:String, name:String)
 
 

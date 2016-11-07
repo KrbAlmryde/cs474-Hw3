@@ -1,7 +1,6 @@
 package com.hw3.Actors
 
 import akka.actor.{Actor, PoisonPill, Props}
-import com.hw3.Patterns.JsonProtocol.RepoDetails
 import com.hw3.Patterns.Messages._
 
 /**
@@ -13,10 +12,10 @@ class UnderstandActor extends Actor {
 
     def receive = {
 
-        case RepoDetails(name, url, id, language) => {
+        case RepoDetails(id, name, url, language) => {
             supervisor = sender
-            repo = RepoDetails(name, url, id, language)
-            context.actorOf(Props[ProcessActor], name = "cloneProcess") ! CloneRepo(id, url, name)
+            repo = RepoDetails(id, name, url, language)
+            context.actorOf(Props[ProcessActor], name = "cloneProcess") ! CloneRepo(id, name, url)
         }
 
         /* ------------------------ *
@@ -24,7 +23,8 @@ class UnderstandActor extends Actor {
           * ----------------------- */
         case CloneResult(0) => {
             sender ! PoisonPill
-            context.actorOf(Props[ProcessActor], name="udbProcess") ! UDB(repo.id, repo.lang, repo.name)
+            context.actorOf(Props[ProcessActor], name="udbProcess") ! UDB(repo.id, repo.name, repo.lang)
+            context.actorOf(Props[ProcessActor], name="cleanProcess") ! CleanRepo(repo.id, repo.name)
         }
 
         // Result of Generating the .udb file

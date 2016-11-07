@@ -3,6 +3,7 @@ package com.hw3.Actors
 import akka.actor.Actor
 import com.hw3.Patterns.Messages._
 import com.hw3.Utils._
+import com.typesafe.sslconfig.util.PrintlnLogger
 
 import scala.sys.process._
 
@@ -14,33 +15,48 @@ class ProcessActor extends Actor {
     val resourceDir = s"$pwd/src/main/resources"
 
     def receive = {
-        case CloneRepo(id, url, path) => {
+        case CloneRepo(id, name, url) => {
             val success = {
                 s"echo $pwd $url $id"
-                        .#&&(s"git clone $url $resourceDir/$id/$path").!
+                        .#&&(s"git clone $url $resourceDir/$id/$name").!
             }
             sender ! CloneResult(success)
 
         }
 
-        // Delete the Repository
-        case CleanRepo(name, id) => {
+
+        case Foo(id, name, url, lang) => {
+            println("\nWe got Foo somehow...\n")
             val success = {
-                s"echo removing $resourceDir/$id/$name"
+                val outFile = s"$resourceDir/$id/$name.udb"
+                val language = lang
+                val sourceDir = s"$$resourceDir/$id/$name"
+
+                s"echo $pwd $url $id"
+                        .#&&(s"git clone $url $resourceDir/$id/$name")
+                        .#&&(s"und -db $outFile create -languages $language add $sourceDir analyze").!
+            }
+            sender ! CloneResult(success)
+        }
+
+
+        // Delete the Repository
+        case CleanRepo(id, name) => {
+            val success = {
+                s"echo ${sender.path.name} asked me to remove $resourceDir/$id/$name"
                         .#&&(s"rm -r $resourceDir/$id/$name").!
             }
             sender ! CloneResult(success)
         }
 
 
-        case UDB(id, lang, name) => {
+        case UDB(id, name, lang) => {
             println("generate a .udb file")
             val outFile = s"$resourceDir/$id/$name.udb"
-            val language = lang
-            val sourceDir = s"$$resourceDir/$id/$name"
+            val sourceDir = s"$resourceDir/$id/$name"
             val success = {
                 s"echo generating $resourceDir/$id/$name.udb"
-                        .#&&(s"und -db $outFile create -languages $language add $sourceDir analyze").!
+                        .#&&(s"und -db $outFile create -languages $lang add $sourceDir analyze").!
             }
             sender ! UDBResult(success)
         }

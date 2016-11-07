@@ -31,7 +31,9 @@ class GitApiActor() extends Actor {
         // Search Pattern; Denotes a request to make a query for Repos of the provided language
         // This will return a response to the master
         case Search(lang) => {
-            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:<5&sort=stars&order=desc"
+
+            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:littlechef+size:2344&sort=stars&order=desc"
+            val url2 = s"https://api.github.com/search/repositories?q=language:$lang+size:<5+repo:reddit&sort=stars&order=desc"
             println(s"\n${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
 
             supervisor = sender
