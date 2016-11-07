@@ -26,10 +26,12 @@ object Messages {
     /**  REQUESTS **/
     // Github API 'Request' patterns
     case class Search(lang:String)  // Searches for Repositories containing the given language
-    case class Content(fullName:String)  // Requests Content of a given Repository and Owner (mostly to get the SHA)
+    case class Commit(fullName:String)  // Requests Content of a given Repository and Owner (mostly to get the SHA)
 
+    // Replies containing results of operations
     case class JsonResult(json:JValue)
     case class CloneResult(success:Int)
+    case class CleanResult(success: Int)
     case class UDBResult(success:Int)
     case class FinalOutput(result:String)  // Should be used
 
@@ -37,8 +39,12 @@ object Messages {
     case class Foo(id:String, name:String, language:String, foo:String)
 
     // When Its time to generate the .UDB file, send this message
-    case class DepGraph(id:String, name:String)
     case class UDB(id:String, name:String, language:String)
+
+    // In order to make the dependency graph we want this
+    case class DepGraph(id:String, name:String)
+
+    //
     case class RepoDetails(id:String, name:String, url:String, lang:String) // Simple example
 
     // In order to clone a Repo, send this request message

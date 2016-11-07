@@ -24,7 +24,6 @@ class UnderstandActor extends Actor {
         case CloneResult(0) => {
             sender ! PoisonPill
             context.actorOf(Props[ProcessActor], name="udbProcess") ! UDB(repo.id, repo.name, repo.lang)
-            context.actorOf(Props[ProcessActor], name="cleanProcess") ! CleanRepo(repo.id, repo.name)
         }
 
         // Result of Generating the .udb file

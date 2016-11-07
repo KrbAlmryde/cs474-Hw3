@@ -32,8 +32,8 @@ class GitApiActor() extends Actor {
         // This will return a response to the master
         case Search(lang) => {
 
-            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:littlechef+size:2344&sort=stars&order=desc"
-            val url2 = s"https://api.github.com/search/repositories?q=language:$lang+size:<5+repo:reddit&sort=stars&order=desc"
+//            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:littlechef+size:2344&sort=stars&order=desc"
+            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:3000&sort=stars&order=desc"
             println(s"\n${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
 
             supervisor = sender
@@ -41,7 +41,7 @@ class GitApiActor() extends Actor {
                     .pipeTo( context.actorOf(Props[JsonActor], name = "jsonSearch") )
         }
 
-        case Content(fullName) => {
+        case Commit(fullName) => {
             val url = s"https://api.github.com/repos/$fullName/contents"
             supervisor = sender
             http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))
