@@ -6,3 +6,7 @@ target
 .idea
 out
 .DS_Store
+
+src/main/resources/*
+*.udb
+
