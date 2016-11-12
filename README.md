@@ -1,10 +1,9 @@
 # CS 474: HW3
 
-Written by Kyle Almryde
-#NOTE WELL
+**Written, developed, tested, and envisioned by Kyle Almryde**
 I did this project by myself because all my group members quit the class :-(
 
-Former group member: Brent Campbell(No hard feelings, bro!)
+Former group member: **Brent Campbell** (No hard feelings, bro!)
 
 #### Preamble
 
@@ -69,7 +68,7 @@ handful of very small projects I developed in past courses. Those files are used
 
 
 #### Unit Testing
-For Unit-testing I utilized Akka's Actor Testkit[ScalaTest](http://www.scalatest.orge) using the [FunSuite](http://doc.scalatest.org/3.0.0/#org.scalatest.FunSuite). Its fun and was surprisingly simple to get it up and running.
+For Unit-testing I utilized Akka's Actor Testkit[ScalaTest](http://www.scalatest.orge) using the [FunSuite](http://doc.scalatest.org/3.0.0/#org.scalatest.FunSuite). Its fun and was surprisingly simple to get it up and running. The Akka Testkit was no walk in the park though, so forgive the stupid simple tests.
 
 Go figure.
 
