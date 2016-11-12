@@ -56,8 +56,7 @@ class UnderstandActor extends Actor {
                 })
 
                 //  Give the RepositoryActor what it wants!
-//                context.actorSelection(s"../repo-${id}")
-                supervisor ! DepGraphResult(dependencyGraph)
+                context.actorSelection(s"../repo-${id}") ! DepGraphResult(dependencyGraph)
 
             } catch {
                 case e:UnderstandException => context.stop(self)

@@ -1,18 +1,22 @@
 # CS 474: HW3
 
 Written by Kyle Almryde
+#NOTE WELL
+I did this project by myself because all my group members quit the class :-(
 
+Former group member: Brent Campbell(No hard feelings, bro!)
 
 #### Preamble
 
-This README documents the installation and usage for the cs474 HW3 tasked with using the [Akka](https://akka.io), [SciTools](https://scitools.com)
-Understand API, [GitHub Developer API](https://developer.github.com/), and [jGraphT](https://github.com/jgrapht/jgrapht) to extract repositories of
-a user defined language and using the listed APIs extract information about a repositories commit history and make general reccommendations
+This README documents the installation and usage for the cs474 HW3 tasked with using the [Akka](https://akka.io) and Scala (among others) to do cool stuff. Read on!
 
 
 ### What is this repository for? ###
 
-* Using the [Scala language](http://www.scala-lang.org/) and Akka Actor system, this application
+* Using the [Scala language](http://www.scala-lang.org/), [Akka](https://akka.io) Actor system, [SciTools](https://scitools.com)
+Understand API, [GitHub Developer API](https://developer.github.com/), and [jGraphT](https://github.com/jgrapht/jgrapht), this application  extracts repositories of
+a user defined language and generates a recommendations to the user in regards to which modules should be tested based on commit history. It generates an Understand Database
+and subsequent dependency graph
 
 
 ### Libraries
@@ -38,11 +42,11 @@ will simply ask you again until you do (or kill the process by hitting enter)
 
 **NOTE: Quotation is not necessary. The application assumes you are passing a string.**
 
-If you would like to run my test application files, make it easy on yourself and type the following at the prompt:
+###Full Disclosure
+If you have a poor internet connection, you are going to have a bad time. Dont let ComCast get you down!
+Joking aside, this app requires a solid internet connection in order to do its job. The app may not shutdown in some cases...
 
- "./src/main/resources/SMSSync-2.7.udb"
 
- "./src/main/resources/SMSSync-3.0.5.udb"
 
 ####Setting up from IntelliJ ####
 
@@ -65,14 +69,22 @@ handful of very small projects I developed in past courses. Those files are used
 
 
 #### Unit Testing
-For Unit-testing I utilized [ScalaTest](http://www.scalatest.orge) using the [FunSuite](http://doc.scalatest.org/3.0.0/#org.scalatest.FunSuite). Its fun and was surprisingly simple to get it up and running.
+For Unit-testing I utilized Akka's Actor Testkit[ScalaTest](http://www.scalatest.orge) using the [FunSuite](http://doc.scalatest.org/3.0.0/#org.scalatest.FunSuite). Its fun and was surprisingly simple to get it up and running.
 
 Go figure.
 
-To run the tests, in Intellij simplly select the **SBT** task "test" and youll be up and running! Que sera
+To run the tests, in Intellij simplly select the **SBT** task "Test" and youll be up and running! Que sera
 
 
 ## Discussion:
+### How to tell something is happening
+Keep an eye on the resources directory under **Kyle_Almryde/src/main/resources** a folder named repositories will appear and be populated with cloned repos.
+
+As things progress, you should expect to see a couple of things:
+- 1) repository directories are by their **ID/repoName**
+-
+
+
 ### Actor Model
 I designed the Actor Model in the following way. The basic idea here is that each
 step in the pipeline is controlled by and actor. Actions like Invoking the Github

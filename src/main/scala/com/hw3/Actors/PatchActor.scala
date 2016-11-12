@@ -31,13 +31,13 @@ class PatchActor extends Actor {
 
             if ( new File(patchFile).exists ) {
                 val results = processPatch( Source.fromFile(patchFile).getLines )
-                val N = results.size
-                val finalReport = new StringBuilder
-                    finalReport.append("\n**--------------------------------------------------------------**")
-                    finalReport.append(s"\tFinal Report for Repo:$id\n")
-                    finalReport.append(s"\t\t$N files (of substance) were changed\n")
-                    println(s"results are: $results")
                 if (results.nonEmpty) {
+                    val N = results.size
+                    val finalReport = new StringBuilder
+                        finalReport.append("\n**--------------------------------------------------------------**\n")
+                        finalReport.append(s"\tFinal Report for Repo:$id\n")
+                        finalReport.append(s"\t\t$N files (of substance) were changed\n")
+                    println(s"results are: $results")
                     val top = results.toList.sortWith(_._2 > _._2)
                     val bottom = results.toList.sortWith(_._1 > _._1)
 
@@ -48,13 +48,18 @@ class PatchActor extends Actor {
 
                     finalReport.append(s"\t\tSuggest developer retest Module $W due to $X additive changes made\n")
                     finalReport.append(s"\t\tSuggest developer retest Module $Y due to $Z subtractive changes made\n")
+                    supervisor ! FinalOutput(finalReport.toString)
 
                 } else {
+                    val finalReport = new StringBuilder
+                    finalReport.append("\n**--------------------------------------------------------------**\n")
+                    finalReport.append(s"\tFinal Report for Repo:$id\n")
+                    finalReport.append(s"\t\t0 files (of substance) were changed\n")
+
                     finalReport.append("\t\tSorry, not enough activity to suggest Action\n")
                     finalReport.append("\t\tMaybe the next commit? :-)\n")
+                    supervisor ! FinalOutput(finalReport.toString)
                 }
-                finalReport.append(finalReport.append("**--------------------------------------------------------------**\n\n"))
-                supervisor ! FinalOutput(finalReport.toString)
             } else
                 println("File not Found! Bummer...")
         }
@@ -63,7 +68,7 @@ class PatchActor extends Actor {
     }
     val languages = List("ada", "assembly", "c", "c++", "c#", "fortran", "java", "jovial", "delphi", "pascal", "pl", "m", "vhdl", "cobol", "php", "html", "css", "javascript", "python")
 
-    def processPatch(contents: Iterator[String]): Iterator[(Int, Int, String)] = {
+    def processPatch(contents: Iterator[String]): List[(Int, Int, String)] = {
 
         val data = {
             contents.filter(line => {
@@ -76,7 +81,7 @@ class PatchActor extends Actor {
                         tupple
                     } // We want them to be tuples
                 }
-            })//.toList
+            }).toList
         }
         data
 

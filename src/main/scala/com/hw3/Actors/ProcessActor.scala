@@ -44,9 +44,6 @@ class ProcessActor extends Actor {
 
         // Generates our patch!
         case GenPatch(id, name) => {
-//            println(s"Generating Patch for $id/$name")
-
-//            val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
             Future {
                 PatchResult(
                     sys.process.Process(
@@ -64,7 +61,6 @@ class ProcessActor extends Actor {
          *********************/
         // Delete the Repository
         case CleanRepo(id) => {
-            println(s"Cleaning up $resourceDir/$id....")
             Future {
                 CleanRepoResult(
                     s"rm -rf $resourceDir/$id".run.exitValue

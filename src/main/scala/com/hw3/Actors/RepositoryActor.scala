@@ -79,6 +79,9 @@ class RepositoryActor(repo:Repo) extends Actor{
             supervisor ! FinalOutput("") // inform the master that this is all it will be getting from you
         }
 
-        case _ => println(s"\n${self.path.name}: That cant be good...\n")
+        case CleanRepoResult(0) => {
+
+        }
+        case x => println(s"\n${self.path.name}: That cant be good...$x -${sender.path.name}\n")
     }
 }
