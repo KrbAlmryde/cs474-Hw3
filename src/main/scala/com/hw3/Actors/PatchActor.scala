@@ -14,7 +14,7 @@ import scala.util.matching.Regex
   */
 class PatchActor extends Actor {
 
-    val resourceDir = "KrbAlmryde_Data"
+    val resourceDir = s"repositories"
 
     def receive: Receive = {
 
@@ -29,7 +29,7 @@ class PatchActor extends Actor {
         case PatchResult(0, id) => {
             println (s"${self.path.name}: Patch made it!!")
 
-            val patchFile = s"KrbAlmryde_Data/resources/$id/1"
+            val patchFile = s"$resourceDir/$id/1"
 
             if ( new File(patchFile).exists ) {
                 println(s"\t${self.path.name}: Great news, it exists too!")
@@ -55,22 +55,18 @@ class PatchActor extends Actor {
 
         val data = {
             contents.filter(line => {
-                val pattern = raw"""\d+\t\d+\t*(\w|/)+.(frag|vert|scala|xml|cfg)""".r
+                val pattern = raw"""\d+\t\d+\t*(\w|/)+.(frag|vert|scala|java|xml|cfg)""".r
                 pattern.findFirstIn(line).isDefined
             })
             .map(line => {
-                println(s"\t$line")
                 line.split("\t") match {
                     case xyz:Array[String] => {
                         val tupple = (xyz(0).toInt, xyz(1).toInt, xyz(2))
-                        println(tupple)
                         tupple
                     } // We want them to be tuples
                 }
             }).toList
         }
-
-        println(s"${self.path.name}: I made this! $data")
         data
 
     }

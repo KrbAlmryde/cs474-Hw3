@@ -16,14 +16,12 @@ class ProcessActor extends Actor {
     import context.dispatcher
 
 //    val resourceDir = s"$pwd/src/main/resources"
-    val resourceDir = s"$pwd/KrbAlmryde_Data/resources"
+    val resourceDir = s"$pwd/repositories"
 
     def receive = {
 
         // Clones provided url to $resourceDir/$id/$name
         case CloneRepo(id, name, url) => {
-            //                                     $resourceDir/$id/$name"
-            println(s"${self.path} cloning $url to $resourceDir/$id/$name")
             Future {
                 CloneResult(
                     s"git clone $url $resourceDir/$id/$name".run.exitValue()
@@ -33,7 +31,6 @@ class ProcessActor extends Actor {
 
         // Generate Understand Database
         case GenUDB(id, name, lang) => {
-            println("generate a .udb file")
             val outFile = s"$resourceDir/$id/$name.udb"
             val sourceDir = s"$resourceDir/$id/$name"
             val stdout = new StringBuilder
@@ -50,11 +47,13 @@ class ProcessActor extends Actor {
 
         // Generates our patch!
         case GenPatch(id, name) => {
-            println("I am making a patch!")
+            println(s"Generating Patch for $id/$name!")
             val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
             Future {
                 PatchResult(
-                    s"cd $resourceDir/$id/$name".#&&( patchCMD ).run.exitValue,
+                    s"cd $resourceDir/$id/$name"
+                            .#&&( s"echo $pwd" )
+                            .#&&( patchCMD ).run.exitValue,
                     id
                 )
             }.pipeTo(sender)

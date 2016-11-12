@@ -30,12 +30,14 @@ object Main extends App {
 
     val masterActor = system.actorOf(Props[MasterActor], name = "master")
 
-    val greeting:String = "Hello! From the following list:\n".concat(languages.foldRight("\n")(_+", "+_))
+    val greeting:String = "\n\nHello! From the following list:\n".concat(languages.foldRight("")(_+", "+_))
 
-    var lang = "java"
+    var lang = ""
     /*
+    */
     while(!isLegalLang(lang)) {
         try {
+            println(greeting)
             lang = StdIn.readLine("Please enter Language: > ")
             if (!isLegalLang(lang)) println(s"Im sorry, but $lang is not a valid entry! Try again...")
         } catch {
@@ -44,12 +46,12 @@ object Main extends App {
             }
         }
     }
-    */
 
+    println(s"Great! Looking for Repositories written in $lang now...")
     masterActor ! Language(lang)
 
     //     Sleep for a moment
-    Thread.sleep(200000)
+    Thread.sleep(300000)
     println("Thanks for playing!")
     // Shut the system down
     Http().shutdownAllConnectionPools().onComplete(_ => system.terminate())
