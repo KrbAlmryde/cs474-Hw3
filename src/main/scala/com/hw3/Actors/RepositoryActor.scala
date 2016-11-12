@@ -40,7 +40,7 @@ class RepositoryActor(repo:Repo) extends Actor{
 
         // Clone has completed, now we can do the real work!
         // Create the understand Actor and generate the dependency graph
-        case CloneResult(0) => {
+        case CloneResult(0, id) => {
             sender ! PoisonPill
             val undActor = context.actorOf(Props[UnderstandActor], name = "understand")
             val patchActor = context.actorOf(Props[PatchActor], name = "patches")
@@ -74,7 +74,7 @@ class RepositoryActor(repo:Repo) extends Actor{
         }
 
 
-        case CloneResult(x) => {
+        case CloneResult(x, id) => {
             println (s"THere was a problem cloning the repo: $x Shutting down...")
             supervisor ! FinalOutput("") // inform the master that this is all it will be getting from you
         }

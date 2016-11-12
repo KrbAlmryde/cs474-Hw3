@@ -35,8 +35,12 @@ will simply ask you again until you do (or kill the process by hitting enter)
  **<JVM does some stuff>**
 
  **----------------------------------------------------------------------------**
+ 
+ 
  **Hello! From the following list:**
+ 
  **ada, assembly, c, c++, c#, fortran, java, jovial, delphi, pascal, pl, m, vhdl, cobol, php, html, css, javascript, python**
+ 
  **Please enter Language: \>** *java*
 
 **NOTE: Quotation is not necessary. The application assumes you are passing a string.**
@@ -59,12 +63,9 @@ Joking aside, this app requires a solid internet connection in order to do its j
 
 
 #### Development Testing
-For testing purposes, I utilized the latest release, ***version 3.0.5*** and ***version 2.7***
+For testing purposes, I tried to keep the size of the repositories relatively small, if only to make downloading and parse etc faster. To that end the repository search string limits search results to 3000kb
 
-*Be aware, these projects are pretty big and will take some time to parse.
-
-To expedite the development, and to test the functionality of the application and the **Understand API** I used a
-handful of very small projects I developed in past courses. Those files are used for the actual Unit Tests proper.
+*Be aware, despite these measures, some of these files can get large and will take some time to parse.
 
 
 #### Unit Testing

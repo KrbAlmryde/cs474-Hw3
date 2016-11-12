@@ -37,9 +37,8 @@ class PatchActor extends Actor {
                         finalReport.append("\n**--------------------------------------------------------------**\n")
                         finalReport.append(s"\tFinal Report for Repo:$id\n")
                         finalReport.append(s"\t\t$N files (of substance) were changed\n")
-                    println(s"results are: $results")
-                    val top = results.toList.sortWith(_._2 > _._2)
-                    val bottom = results.toList.sortWith(_._1 > _._1)
+                    val top = results.sortWith(_._2 > _._2)
+                    val bottom = results.sortWith(_._1 > _._1)
 
                     val W = top.head._3
                     val X = top.head._2

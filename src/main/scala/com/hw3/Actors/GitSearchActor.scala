@@ -32,9 +32,8 @@ class GitSearchActor() extends Actor {
         // This will return a response to the master
         case GitSearch(lang) => {
 
-//            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:flappybird+size:2344&sort=stars&order=desc"
-            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:2000&sort=stars&order=desc"
-//            println(s"\n${self.path.name}: -> ${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
+
+            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:3000&sort=stars&order=desc"
 
             supervisor = sender
             http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))

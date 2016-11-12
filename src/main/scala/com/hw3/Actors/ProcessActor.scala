@@ -21,7 +21,8 @@ class ProcessActor extends Actor {
         case CloneRepo(id, name, url) => {
             Future {
                 CloneResult(
-                    s"git clone $url $resourceDir/$id/$name".run.exitValue()
+                    s"git clone $url $resourceDir/$id/$name".run.exitValue(),
+                    id
                 )
             }.pipeTo(sender)
         }
@@ -44,12 +45,15 @@ class ProcessActor extends Actor {
 
         // Generates our patch!
         case GenPatch(id, name) => {
+            val stdout = new StringBuilder
+            val stderr = new StringBuilder
+
             Future {
                 PatchResult(
                     sys.process.Process(
                         Seq("git", "format-patch", "--summary", "--numstat", "--numbered-files", "--ignore-blank-lines", "--no-binary", "-1", "HEAD", "-o", s"$resourceDir/$id"),
                         new java.io.File(s"$resourceDir/$id/$name")
-                    ).run.exitValue,
+                    ).run(ProcessLogger(stdout append _, stderr append _) ).exitValue,
                     id
                 )
             }.pipeTo(sender)

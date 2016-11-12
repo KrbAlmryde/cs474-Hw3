@@ -17,8 +17,6 @@ import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 class UnderstandActor extends Actor {
     var supervisor = self
     var repo = RepoDetails("","","","")
-    val resourceDir = s"$pwd/src/main/resources"
-
 
     def receive = {
 
@@ -32,8 +30,6 @@ class UnderstandActor extends Actor {
         case UDBResult(0, id, name) => {
             // At confirmation that the process was successful, kill the Actor in charge of the task
             sender ! PoisonPill
-
-            println (s"Generating Dependency Graph for $id/$name")
 
             val inputFile = s"$resourceDir/$id/$name.udb"
             try {
@@ -59,7 +55,10 @@ class UnderstandActor extends Actor {
                 context.actorSelection(s"../repo-${id}") ! DepGraphResult(dependencyGraph)
 
             } catch {
-                case e:UnderstandException => context.stop(self)
+                case e:UnderstandException => {
+                    println(s"${self.path.name} trouble: $inputFile")
+                    supervisor ! FinalOutput("Failed")
+                }
             }
 
         }
@@ -98,7 +97,7 @@ class UnderstandActor extends Actor {
         /* --------------------- *
          * In case Process fails *
          * --------------------- */
-        case CloneResult(1) => {
+        case CloneResult(_, _) => {
             println("The repo failed to clone")
             //context.actorOf(Props[ProcessActor], name="cleanProcess") ! CleanRepo(repo.id, repo.name)
             context.stop(self)
@@ -122,7 +121,7 @@ class UnderstandActor extends Actor {
             val parentName = parent.name
             graph.addEdge(parentName, entityName)
         }
-        //        println(indent+entity.kind.name+"++"+entityName)
+//        println(indent+entity.kind.name+"++"+entityName)
         typedRefs.foreach( ref => {
             graphEntity(graph, entity, ref.ent, kindString, "  "+indent)
         })

@@ -40,7 +40,7 @@ object Messages {
 
     /**  PROCESS RESULTS **/
     // For use with Processes
-    case class CloneResult(success:Int)
+    case class CloneResult(success:Int, id:String)
     case class UDBResult(success:Int, id:String, name:String)
     case class CommitResult(success:Int)
     case class CleanRepoResult(success: Int)
