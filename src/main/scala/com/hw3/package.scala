@@ -18,7 +18,7 @@ package object Utils {
     val token = "902ce489af3ba9806e067f1eea20b8f454940614" // This is my GitHub Personal OAuth token. Use it wisely
     val App_Start_Range = 52001  // not really sure what this is yet
     val languages = List("ada", "assembly", "c", "c++", "c#", "fortran", "java", "jovial", "delphi", "pascal", "pl", "m", "vhdl", "cobol", "php", "html", "css", "javascript", "python")
-
+    val resourceDir = s"$pwd/src/main/resources/repositories"
     /**
       * Useful things to know for the future
       */

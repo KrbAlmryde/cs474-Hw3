@@ -1,6 +1,6 @@
 package com.hw3.Actors
 
-import akka.actor.{Actor, PoisonPill}
+import akka.actor.Actor
 import com.hw3.Patterns.Messages._
 import com.hw3.Utils._
 
@@ -14,9 +14,6 @@ class ProcessActor extends Actor {
 
     import akka.pattern.pipe
     import context.dispatcher
-
-//    val resourceDir = s"$pwd/src/main/resources"
-    val resourceDir = s"$pwd/repositories"
 
     def receive = {
 
@@ -35,7 +32,7 @@ class ProcessActor extends Actor {
             val sourceDir = s"$resourceDir/$id/$name"
             val stdout = new StringBuilder
             val stderr = new StringBuilder
-            println(s"generating $resourceDir/$id/$name.udb")
+//            println(s"generating $resourceDir/$id/$name.udb")
             Future {
                 UDBResult(
                     s"und -db $outFile create -languages $lang add $sourceDir analyze".run( ProcessLogger(stdout append _, stderr append _) ).exitValue,
@@ -47,7 +44,7 @@ class ProcessActor extends Actor {
 
         // Generates our patch!
         case GenPatch(id, name) => {
-            println(s"Generating Patch for $id/$name!")
+//            println(s"Generating Patch for $id/$name")
 
 //            val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
             Future {
@@ -57,10 +54,6 @@ class ProcessActor extends Actor {
                         new java.io.File(s"$resourceDir/$id/$name")
                     ).run.exitValue,
                     id
-//                    s"cd $resourceDir/$id/$name"
-//                            .#&&( s"echo $pwd" )
-//                            .#&&( patchCMD ).run.exitValue,
-//                    id
                 )
             }.pipeTo(sender)
         }
@@ -71,7 +64,7 @@ class ProcessActor extends Actor {
          *********************/
         // Delete the Repository
         case CleanRepo(id) => {
-            println(s"${sender.path.name} asked me to remove $resourceDir/$id")
+            println(s"Cleaning up $resourceDir/$id....")
             Future {
                 CleanRepoResult(
                     s"rm -rf $resourceDir/$id".run.exitValue

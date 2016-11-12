@@ -1,6 +1,7 @@
 package com.hw3.Actors
 
 import akka.actor.{Actor, PoisonPill, Props}
+import akka.http.scaladsl.Http
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.hw3.Utils.App_Start_Range
 import com.hw3.Patterns.JsonProtocol.{Repo, SearchResult}
@@ -18,7 +19,7 @@ class MasterActor extends Actor {
 
     // Implicits
     implicit val formats = DefaultFormats // Brings in default date formats etc.
-
+    var total_repos = 0
 //    final implicit val materializer:ActorMaterializer = ActorMaterializer(ActorMaterializerSettings(context.system))
 
     def receive = {
@@ -33,7 +34,11 @@ class MasterActor extends Actor {
             sender() ! PoisonPill
 //            println (s"Master: ${sender.path.name} sent us some $json")
 
-            json.extract[SearchResult].items.foreach(repo => {
+            val jsonObjects = json.extract[SearchResult].items
+
+            total_repos = jsonObjects.size
+            println(s"Found a total of $total_repos open-source projects written in ${jsonObjects.head.language.get}\n")
+            jsonObjects.foreach(repo => {
                 val repoActor = context.actorOf(RepositoryActor.props(repo), name=s"repo-${repo.id}")
                 repoActor ! WakeUp
             })
@@ -42,8 +47,12 @@ class MasterActor extends Actor {
 
         // To be used when a RepoClient sends the completed response back
         case FinalOutput(x) => {
+            total_repos -= 1
             println(x)
+            println(s"remaining threads: $total_repos")
             sender() ! PoisonPill
+            if (total_repos < 1)
+                self ! PoisonPill
         }
 
 

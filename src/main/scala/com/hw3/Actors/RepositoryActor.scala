@@ -20,7 +20,6 @@ object RepositoryActor {
       */
 
     def props(repo:Repo): Props = {
-//        println(s"Instantiating RepoActor: $repo")
         Props(new RepositoryActor(repo))
     }
 }
@@ -51,7 +50,7 @@ class RepositoryActor(repo:Repo) extends Actor{
                     !! GENERATE .UDB FILE !!
              */
             patchActor ! GenPatch(repo.id.toString, repo.name.get)
-//            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
+            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
         }
 
         // The Dependency Graph file has been successfully parsed!
@@ -70,23 +69,14 @@ class RepositoryActor(repo:Repo) extends Actor{
             context.actorOf(Props[ProcessActor], name="Reset") ! CleanRepo(repo.id.toString)
         }
         case FinalOutput(results) => {
+            context.actorOf(Props[ProcessActor], name="cleaner") ! CleanRepo(repo.id.toString)
             supervisor ! FinalOutput(results)
         }
-//        case PatchResult(0, id) => {
-//            println (s"${self.path.name}: Patch mad it!!")
-//
-//            val patchFile = s"KrbAlmryde_Data/resources/${repo.id}/1"
-//
-//            if ( new File(patchFile).exists ) {
-//
-//            } else
-//                println("File not Found! Bummer...")
-//        }
 
 
-        case CloneResult(_) => {
-            println ("THere was a problem cloning the repo! Shutting down")
-            self ! PoisonPill // kill your self!
+        case CloneResult(x) => {
+            println (s"THere was a problem cloning the repo: $x Shutting down...")
+            supervisor ! FinalOutput("") // inform the master that this is all it will be getting from you
         }
 
         case _ => println(s"\n${self.path.name}: That cant be good...\n")

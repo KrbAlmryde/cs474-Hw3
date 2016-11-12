@@ -30,7 +30,8 @@ object Main extends App {
 
     val masterActor = system.actorOf(Props[MasterActor], name = "master")
 
-    val greeting:String = "\n\nHello! From the following list:\n".concat(languages.foldRight("")(_+", "+_))
+    val bar = "\n**----------------------------------------------------------------------------**\n"
+    val greeting:String = bar.concat("\nHello! From the following list:\n".concat(languages.foldRight("")(_+", "+_)))
 
     var lang = ""
     /*
