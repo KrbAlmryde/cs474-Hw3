@@ -74,7 +74,11 @@ To run the tests, in Intellij simplly select the **SBT** task "test" and youll b
 
 ## Discussion:
 ### Actor Model
-I designed the Actor Model in the following way.
+I designed the Actor Model in the following way. The basic idea here is that each
+step in the pipeline is controlled by and actor. Actions like Invoking the Github
+API or generating the Patch and Understand Dependency graph each got their own actor.
+My aim was to encapsulate as much of the task within the particular actor as I could
+manage. For actions that invoked the system shell I created a separate 'Process Actor'
 ![Actor Model](docs/Almryde_ActorModel.png)
 
 
