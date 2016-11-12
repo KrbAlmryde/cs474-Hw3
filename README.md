@@ -74,7 +74,8 @@ To run the tests, in Intellij simplly select the **SBT** task "test" and youll b
 
 ## Discussion:
 ### Actor Model
-I produced my Actor model using the following something something Concurrency something something complete
+I designed the Actor Model in the following way.
+![Actor Model](docs/Almryde_ActorModel.png)
 
 
 ### Who do I talk to? ###
