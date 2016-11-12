@@ -27,6 +27,7 @@ object RepositoryActor {
 
 class RepositoryActor(repo:Repo) extends Actor{
 
+    var supervisor = self
 
     def receive: Receive = {
 
@@ -34,6 +35,7 @@ class RepositoryActor(repo:Repo) extends Actor{
         case WakeUp => {
 //            println(s"${self.path.name}: I awakened from ${sender.path.name}")
             // ProcessActor ! CloneRepo
+            supervisor = sender
             context.actorOf(Props[ProcessActor], name = "cloneProcess") ! CloneRepo(repo.id.toString(), repo.name.get, repo.html_url.get)
         }
 
@@ -49,7 +51,7 @@ class RepositoryActor(repo:Repo) extends Actor{
                     !! GENERATE .UDB FILE !!
              */
             patchActor ! GenPatch(repo.id.toString, repo.name.get)
-            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
+//            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
         }
 
         // The Dependency Graph file has been successfully parsed!
@@ -67,7 +69,9 @@ class RepositoryActor(repo:Repo) extends Actor{
 
             context.actorOf(Props[ProcessActor], name="Reset") ! CleanRepo(repo.id.toString)
         }
-
+        case FinalOutput(results) => {
+            supervisor ! FinalOutput(results)
+        }
 //        case PatchResult(0, id) => {
 //            println (s"${self.path.name}: Patch mad it!!")
 //

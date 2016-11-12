@@ -1,0 +1,38 @@
+From 6c0ad4b44d6588152a12e9ee42496a283ca545dc Mon Sep 17 00:00:00 2001
+From: Josh <joshuawright11@gmail.com>
+Date: Thu, 24 Apr 2014 15:54:09 -0500
+Subject: [PATCH] Demo commit..
+
+
+1	1	res/values/strings_activity_login.xml
+1	1	src/render/TimelineDisplay.java
+
+diff --git a/res/values/strings_activity_login.xml b/res/values/strings_activity_login.xml
+index a5fd104..8d73af2 100644
+--- a/res/values/strings_activity_login.xml
++++ b/res/values/strings_activity_login.xml
+@@ -8,7 +8,7 @@
+     <string name="action_sign_in_register"><b>Sign in</b> or register</string>
+     <string name="action_sign_in_short">Sign in</string>
+     <string name="action_forgot_password">Recover lost password</string>
+-    <string name="login_progress_signing_in">Signing in&#8230;</string>
++    <string name="login_progress_signing_in">Fetching data&#8230;</string>
+     <string name="error_invalid_email">This email address is invalid</string>
+     <string name="error_invalid_password">This password is too short</string>
+     <string name="error_incorrect_password">This password is incorrect</string>
+diff --git a/src/render/TimelineDisplay.java b/src/render/TimelineDisplay.java
+index 2cdc634..a186099 100644
+--- a/src/render/TimelineDisplay.java
++++ b/src/render/TimelineDisplay.java
+@@ -472,7 +472,7 @@ public class TimelineDisplay extends RelativeLayout{
+ 			DurationTextView label = new DurationTextView(getContext(), e, xStart, (pushDown + 45 + counter), labelWidth);
+ 			eventLabels.add(label);
+ 			addView(label);
+-			pushDown += 25;
++			pushDown += 40;
+ 		}
+ 		pushDown += 65;
+ 	}
+-- 
+2.8.4 (Apple Git-73)
+

@@ -42,6 +42,7 @@ class MasterActor extends Actor {
 
         // To be used when a RepoClient sends the completed response back
         case FinalOutput(x) => {
+            println(x)
             sender() ! PoisonPill
         }
 

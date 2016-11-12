@@ -1,0 +1,45 @@
+From cb01366c17b11d23d60a9793f78163b28a39f2cb Mon Sep 17 00:00:00 2001
+From: Vikalp Patel <vikalppatelce@yahoo.com>
+Date: Tue, 19 Feb 2013 04:09:26 -0800
+Subject: [PATCH] Create Readme
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+PostCard App Source Code for Android
+
+Contains - Image Editing
+         - Edit & Add Greeting on Image
+
+20	0	README.md
+ create mode 100644 README.md
+
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..88f29b4
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,20 @@
++PostCard
++========
++
++
++PostCard App for Android @ OrangeSoft
++---------------------------------------
++
++It's a PostCard App for Android which create a PostCard with Image pulled from facebook or internal sd card. 
++Editing and Adding Greeting are the main feature of these PostCard App.
++
++1. Edit 
++       - Move | Drag | Translate - Single Touch
++       - Resize | Scale | Crop   - Double Touch | Pinch
++       - Rotate                  - Three Touch | Rotate
++       - Adding Effects          - Using Aviray SDK
++
++2. Add Text
++       - Greeting ==> EDIT | DRAG | ROTATE | SIZE | FONT | FONTFAMILY | COLOR
++
++==================================================================
+-- 
+2.8.4 (Apple Git-73)
+

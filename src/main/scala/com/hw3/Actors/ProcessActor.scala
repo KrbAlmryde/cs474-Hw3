@@ -48,13 +48,19 @@ class ProcessActor extends Actor {
         // Generates our patch!
         case GenPatch(id, name) => {
             println(s"Generating Patch for $id/$name!")
-            val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
+
+//            val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
             Future {
                 PatchResult(
-                    s"cd $resourceDir/$id/$name"
-                            .#&&( s"echo $pwd" )
-                            .#&&( patchCMD ).run.exitValue,
+                    sys.process.Process(
+                        Seq("git", "format-patch", "--summary", "--numstat", "--numbered-files", "--ignore-blank-lines", "--no-binary", "-1", "HEAD", "-o", s"$resourceDir/$id"),
+                        new java.io.File(s"$resourceDir/$id/$name")
+                    ).run.exitValue,
                     id
+//                    s"cd $resourceDir/$id/$name"
+//                            .#&&( s"echo $pwd" )
+//                            .#&&( patchCMD ).run.exitValue,
+//                    id
                 )
             }.pipeTo(sender)
         }

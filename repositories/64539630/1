@@ -1,0 +1,24 @@
+From 74492c36f99c4b8916138a7d43c3e044379c9049 Mon Sep 17 00:00:00 2001
+From: ricamgar <ricardocamposgarcia@gmail.com>
+Date: Sat, 5 Nov 2016 01:05:41 +0100
+Subject: [PATCH] bumped version number
+
+
+1	1	build.gradle
+
+diff --git a/build.gradle b/build.gradle
+index 5f36979..c60ecf4 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -21,7 +21,7 @@ allprojects {
+         androidTargetSdkVersion = 23
+         androidCompileSdkVersion = 23
+         androidApplicationId = 'com.ricamgar.notify'
+-        androidVersionCode = 1
++        androidVersionCode = 2
+         androidVersionName = '1.0'
+     }
+ 
+-- 
+2.8.4 (Apple Git-73)
+

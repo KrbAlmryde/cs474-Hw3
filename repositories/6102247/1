@@ -1,0 +1,28 @@
+From 665ba9e4ef5a8af30cffe6df6baee7e311dd0e65 Mon Sep 17 00:00:00 2001
+From: Mindy Pereira <mindyp@google.com>
+Date: Tue, 21 Feb 2012 09:18:38 -0800
+Subject: [PATCH] Don't adjust scroll on focus changes.
+
+Fixes b/6037251 Switching input fields causes line loss
+Since the ime suggestions area may also be going up/ down
+we can't really trust offset measurements. Adamp says
+this should be addressed in the j timeframe.
+Change-Id: I5f5eeb33e0fd9397873451cb1d1325deb451542d
+
+0	1	chips/src/com/android/ex/chips/RecipientEditTextView.java
+
+diff --git a/chips/src/com/android/ex/chips/RecipientEditTextView.java b/chips/src/com/android/ex/chips/RecipientEditTextView.java
+index 650e107..a3d73e4 100644
+--- a/chips/src/com/android/ex/chips/RecipientEditTextView.java
++++ b/chips/src/com/android/ex/chips/RecipientEditTextView.java
+@@ -331,7 +331,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
+             shrink();
+         } else {
+             expand();
+-            scrollLineIntoView(getLineCount());
+         }
+     }
+ 
+-- 
+2.8.4 (Apple Git-73)
+

@@ -1,0 +1,33 @@
+From 3768f17f46e8133884b953a319c1c05061decf92 Mon Sep 17 00:00:00 2001
+From: "Felix H. Dahlke" <fhd@ubercode.de>
+Date: Mon, 15 Nov 2010 11:03:47 +0100
+Subject: [PATCH] Removed the paper from the repository and added a link to the
+ README.
+
+
+3	1	README.md
+-	-	doc/java_unit_evolution.pdf
+ delete mode 100644 doc/java_unit_evolution.pdf
+
+diff --git a/README.md b/README.md
+index 57e7b73..edd5540 100644
+--- a/README.md
++++ b/README.md
+@@ -9,7 +9,9 @@ description, it is not possible to evolve anything but the most
+ trivial programs. Java Unit Evolution is of no practical use in its
+ current state.
+ 
+-Please read *doc/java_unit_evolution.pdf* to learn more.
++Please read
++[the paper](https://github.com/downloads/fhd/java-unit-evolution/java_unit_evolution.pdf)
++to learn more.
+ 
+ Building
+ --------
+diff --git a/doc/java_unit_evolution.pdf b/doc/java_unit_evolution.pdf
+deleted file mode 100644
+index f446aa6..0000000
+Binary files a/doc/java_unit_evolution.pdf and /dev/null differ
+-- 
+2.8.4 (Apple Git-73)
+
