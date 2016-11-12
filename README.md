@@ -15,7 +15,7 @@ This README documents the installation and usage for the cs474 HW3 tasked with u
 * Using the [Scala language](http://www.scala-lang.org/), [Akka](https://akka.io) Actor system, [SciTools](https://scitools.com)
 Understand API, [GitHub Developer API](https://developer.github.com/), and [jGraphT](https://github.com/jgrapht/jgrapht), this application  extracts repositories of
 a user defined language and generates a recommendations to the user in regards to which modules should be tested based on commit history. It generates an Understand Database
-and subsequent dependency graph
+and subsequent dependency graph as well as a patch file, which when combined provide metrics to the user about application usage
 
 
 ### Libraries
@@ -77,7 +77,7 @@ To run the tests, in Intellij simplly select the **SBT** task "Test" and youll b
 
 ## Discussion:
 ### How to tell something is happening
-Keep an eye on the resources directory under **Kyle_Almryde/src/main/resources** a folder named repositories will appear and be populated with cloned repos.
+Keep an eye on the resources directory under **<this_project_source_dir>/src/main/resources** a folder named repositories will appear and be populated with cloned repos.
 
 As things progress, you should expect to see a couple of things:
 - 1) repository directories are by their **ID/repoName**
