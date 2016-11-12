@@ -3,7 +3,7 @@ package com.hw3.Actors
 import akka.actor.{Actor, PoisonPill, Props}
 import com.hw3.Patterns.Messages._
 import com.hw3.Utils._
-import com.scitools.understand.{Database, Entity, Understand}
+import com.scitools.understand.{Database, Entity, Understand, UnderstandException}
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 
 /**
@@ -36,27 +36,32 @@ class UnderstandActor extends Actor {
             println (s"Generating Dependency Graph for $id/$name")
 
             val inputFile = s"$resourceDir/$id/$name.udb"
+            try {
 
-            // The Understand Database Resource file.
-            val dataBase:Database = Understand.open( inputFile )
+                // The Understand Database Resource file.
+                val dataBase:Database = Understand.open( inputFile )
 
-            // The jGrapht Dependency Graph object.
-            var dependencyGraph: SimpleDirectedGraph[String, DefaultEdge] = new SimpleDirectedGraph[String, DefaultEdge](classOf[DefaultEdge])
+                // The jGrapht Dependency Graph object.
+                var dependencyGraph: SimpleDirectedGraph[String, DefaultEdge] = new SimpleDirectedGraph[String, DefaultEdge](classOf[DefaultEdge])
 
-            // First, get a list of all classes, interfaces, or packages
-            val types:String = "method ~unknown ~unresolved"
-            // Generate the dependency graph using all methods defined internally
-            val pFiles:Array[Entity] = dataBase.ents(types)
+                // First, get a list of all classes, interfaces, or packages
+                val types:String = "method ~unknown ~unresolved"
+                // Generate the dependency graph using all methods defined internally
+                val pFiles:Array[Entity] = dataBase.ents(types)
 
-            println(s"Generating Dependency Graph now for $name.udb. Please wait....")
-            pFiles.foreach( fileEntity => {
-                graphEntity(dependencyGraph, null, fileEntity, "definein definein call create set init use partial call end endby", " ")
+                println(s"Generating Dependency Graph now for $name.udb. Please wait....")
+                pFiles.foreach( fileEntity => {
+                    graphEntity(dependencyGraph, null, fileEntity, "definein definein call create set init use partial call end endby", " ")
 
-            })
+                })
 
-//          Give the RepositoryActor what it wants!
-            context.actorSelection(s"../repo-${id}")! DepGraphResult(dependencyGraph)
-//            supervisor
+                //  Give the RepositoryActor what it wants!
+//                context.actorSelection(s"../repo-${id}")
+                supervisor ! DepGraphResult(dependencyGraph)
+
+            } catch {
+                case e:UnderstandException => context.stop(self)
+            }
 
         }
 
@@ -69,7 +74,7 @@ class UnderstandActor extends Actor {
             // At confirmation that the result succeeded, kill the Actor in charge
             sender ! PoisonPill
 
-            context.actorOf(Props[DepGraphActor], name="depGraph") ! DepGraph(repo.id, repo.name)
+//            context.actorOf(Props[DepGraphActor], name="depGraph") ! DepGraph(repo.id, repo.name)
         }
 
 

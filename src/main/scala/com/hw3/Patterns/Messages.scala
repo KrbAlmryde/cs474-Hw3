@@ -45,7 +45,7 @@ object Messages {
     case class CommitResult(success:Int)
     case class CleanRepoResult(success: Int)
     case class CleanUDBResult(success: Int)
-    case class PatchResult(success: Int)
+    case class PatchResult(success: Int, id:String)
 
     /** OPERATIONS **/
     // Simple instruction messages defining operations

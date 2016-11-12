@@ -24,7 +24,7 @@ import akka.stream.ActorMaterializer
   */
 object Main extends App {
 
-    implicit val system = ActorSystem("HelloSystem")
+    implicit val system = ActorSystem("Hw3System")
     implicit val materializer = ActorMaterializer()
     import system.dispatcher
 

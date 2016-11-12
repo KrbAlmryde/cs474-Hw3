@@ -31,7 +31,7 @@ class JsonActor extends Actor {
 
 
         case HttpResponse(StatusCodes.OK, headers, entity, _) => {
-            println(s"\n${self.path}\n${self.path.name}: Request piped through successfully! ${entity.contentType}\n\tfrom ${sender.path.name}")
+//            println(s"\n${self.path}\n${self.path.name}: Request piped through successfully! ${entity.contentType}\n\tfrom ${sender.path.name}")
 
             // Extract the content string type to Json and pipe it over to the JsonHandling Actor
             entity.dataBytes

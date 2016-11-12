@@ -1,5 +1,7 @@
 package com.hw3.Actors
 
+import java.io.File
+
 import akka.actor.{Actor, PoisonPill, Props}
 import com.hw3.Patterns.JsonProtocol.Repo
 import com.hw3.Patterns.Messages._
@@ -30,7 +32,7 @@ class RepositoryActor(repo:Repo) extends Actor{
 
         // This is the entry point.
         case WakeUp => {
-            println(s"${self.path.name}: I awakened from ${sender.path.name}")
+//            println(s"${self.path.name}: I awakened from ${sender.path.name}")
             // ProcessActor ! CloneRepo
             context.actorOf(Props[ProcessActor], name = "cloneProcess") ! CloneRepo(repo.id.toString(), repo.name.get, repo.html_url.get)
         }
@@ -40,14 +42,17 @@ class RepositoryActor(repo:Repo) extends Actor{
         case CloneResult(0) => {
             sender ! PoisonPill
             val undActor = context.actorOf(Props[UnderstandActor], name = "understand")
-            val patchActor = context.actorOf(Props[ProcessActor], name = "patches")
+            val patchActor = context.actorOf(Props[PatchActor], name = "patches")
 
-            // This one seems faster, do it first
+            /*
+                    !! GENERATE THE PATCH !!
+                    !! GENERATE .UDB FILE !!
+             */
             patchActor ! GenPatch(repo.id.toString, repo.name.get)
-//            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
+            undActor ! GenUDB(repo.id.toString, repo.name.get, repo.language.get)
         }
 
-        // The Dependency Graph file has been
+        // The Dependency Graph file has been successfully parsed!
         case DepGraphResult(graph) => {
             println(s"Received a Dependency Graph from ${sender.path.name}!")
             var counter = 50
@@ -63,13 +68,17 @@ class RepositoryActor(repo:Repo) extends Actor{
             context.actorOf(Props[ProcessActor], name="Reset") ! CleanRepo(repo.id.toString)
         }
 
-        case PatchResult(0) => {
-            println (s"${self.path.name}: Got the output here!")
-        }
+//        case PatchResult(0, id) => {
+//            println (s"${self.path.name}: Patch mad it!!")
+//
+//            val patchFile = s"KrbAlmryde_Data/resources/${repo.id}/1"
+//
+//            if ( new File(patchFile).exists ) {
+//
+//            } else
+//                println("File not Found! Bummer...")
+//        }
 
-        case PatchResult(_) => {
-            println (s"${self.path.name}: THere was a problem making a patch!!")
-        }
 
         case CloneResult(_) => {
             println ("THere was a problem cloning the repo! Shutting down")

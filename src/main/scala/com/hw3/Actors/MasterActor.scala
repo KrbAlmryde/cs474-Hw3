@@ -24,28 +24,19 @@ class MasterActor extends Actor {
     def receive = {
 
         case Language(x) => {
-            println(s"Dispatching GitHub API to search for $x")
+//            println(s"Dispatching GitHub API to search for $x")
             context.actorOf(Props[GitSearchActor], name = "gitSearch") ! GitSearch(x.toLowerCase)
         }
 
         // The resulting JSON object from the SearchRequest
         case JsonResult(json) => {
             sender() ! PoisonPill
-            println (s"Master: ${sender.path.name} sent us some $json")
+//            println (s"Master: ${sender.path.name} sent us some $json")
 
             json.extract[SearchResult].items.foreach(repo => {
-
-                context.actorOf(RepositoryActor.props(repo), name=s"repo-${repo.name.get}") ! WakeUp
-//                if ( App_Start_Range < repo.id  && repo.id < App_Start_Range+1000 ) {
-//                    println (s"\t\t\tcreating ${repo.name}")
-//                    // create Actor RepoClient(repo) named "repo-<repository id>
-//                }
+                val repoActor = context.actorOf(RepositoryActor.props(repo), name=s"repo-${repo.id}")
+                repoActor ! WakeUp
             })
-
-//            json.extract[SearchResult].items.foreach(repo => {
-//                val repoActor = context.actorOf(RepoClientActor.props(repo), name=s"repo-${repo.id}")
-//                repoActor ! WakeUp
-//            })
         }
 
 

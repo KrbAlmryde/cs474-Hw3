@@ -15,7 +15,8 @@ class ProcessActor extends Actor {
     import akka.pattern.pipe
     import context.dispatcher
 
-    val resourceDir = s"$pwd/src/main/resources"
+//    val resourceDir = s"$pwd/src/main/resources"
+    val resourceDir = s"$pwd/KrbAlmryde_Data/resources"
 
     def receive = {
 
@@ -35,10 +36,12 @@ class ProcessActor extends Actor {
             println("generate a .udb file")
             val outFile = s"$resourceDir/$id/$name.udb"
             val sourceDir = s"$resourceDir/$id/$name"
+            val stdout = new StringBuilder
+            val stderr = new StringBuilder
             println(s"generating $resourceDir/$id/$name.udb")
             Future {
                 UDBResult(
-                    Seq("sh", "-c", s"und -db $outFile create -languages $lang add $sourceDir analyze", " >/dev/null").run.exitValue,
+                    s"und -db $outFile create -languages $lang add $sourceDir analyze".run( ProcessLogger(stdout append _, stderr append _) ).exitValue,
                     id,
                     name
                 )
@@ -48,19 +51,19 @@ class ProcessActor extends Actor {
         // Generates our patch!
         case GenPatch(id, name) => {
             println("I am making a patch!")
+            val patchCMD = s"git format-patch --summary --numstat --numbered-files --ignore-blank-lines --no-binary -1 HEAD -o $resourceDir/$id"
             Future {
                 PatchResult(
-                    s"git format-patch --no-binary -1 HEAD $resourceDir/$id".run.exitValue()
+                    s"cd $resourceDir/$id/$name".#&&( patchCMD ).run.exitValue,
+                    id
                 )
             }.pipeTo(sender)
-
         }
 
 
         /*********************
          *  CLEAN UP MESSAGES
          *********************/
-
         // Delete the Repository
         case CleanRepo(id) => {
             println(s"${sender.path.name} asked me to remove $resourceDir/$id")

@@ -32,34 +32,25 @@ class GitSearchActor() extends Actor {
         // This will return a response to the master
         case GitSearch(lang) => {
 
-//            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:littlechef+size:2344&sort=stars&order=desc"
-            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:3000&sort=stars&order=desc"
-            println(s"\n${self.path.name}: -> ${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
+//            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:flappybird+size:2344&sort=stars&order=desc"
+            val url = s"https://api.github.com/search/repositories?q=language:$lang+size:2000&sort=stars&order=desc"
+//            println(s"\n${self.path.name}: -> ${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
 
             supervisor = sender
             http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))
                     .pipeTo( context.actorOf(Props[JsonActor], name = "jsonSearch") )
         }
-
-
-        case GitCommit(fullName) => {
-            val url = s"https://api.github.com/repos/$fullName/contents"
-            supervisor = sender
-            http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))
-                    .pipeTo( context.actorOf(Props[JsonActor], name = "jsonSearch") )
-        }
-
 
         // Get the resultant JSON from the child JsonActor. Stop the child actor and pass along the
         // resultant json data to the Supervisor
         case JsonResult(json) => {
-            println (s"\n${self.path.name}:->${sender.path.name} sent us some $json")
+//            println (s"\n${self.path.name}:->${sender.path.name} sent us some $json")
             sender() ! PoisonPill
             supervisor ! JsonResult(json)
         }
 
         case MyMessage(m) => {
-            println(s"${self.toString}:I received the message: $m")
+//            println(s"${self.toString}:I received the message: $m")
             sender() ! Done(s"I got your message! -${self.toString} ")
         }
 
