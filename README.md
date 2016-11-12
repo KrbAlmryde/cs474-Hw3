@@ -78,7 +78,14 @@ I designed the Actor Model in the following way. The basic idea here is that eac
 step in the pipeline is controlled by and actor. Actions like Invoking the Github
 API or generating the Patch and Understand Dependency graph each got their own actor.
 My aim was to encapsulate as much of the task within the particular actor as I could
-manage. For actions that invoked the system shell I created a separate 'Process Actor'
+manage. For actions that invoked the system shell I created a separate 'Process Actor'.
+For my purposes there was only one Github actor, it performed the query, and piped the results
+back to the overseeing master actor, who then distributed the resulting json blobs to a dedicated
+repository manager actor. This actor was responsible for overseeing the generation of the Understand database,
+Patch file, and eventually composing and joining both of those pieces of information. Finally, it takes this
+composition, generates a report, and sends THAT to the Master actor whom is overseeing all of these child
+Repository actors, prints the results to Standard output, then shuts down the repository (deleting the contents of
+the folder as well). It aint perfect by any measure of the word, but it works **mostly**
 ![Actor Model](docs/Almryde_ActorModel.png)
 
 
