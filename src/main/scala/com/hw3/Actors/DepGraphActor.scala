@@ -2,7 +2,7 @@ package com.hw3.Actors
 
 import com.hw3.Utils._
 import akka.actor.Actor
-import com.hw3.Patterns.Messages.DepGraph
+import com.hw3.Patterns.Messages.{DepGraph, DepGraphResult}
 import com.scitools.understand._
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 
@@ -13,26 +13,6 @@ import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 class DepGraphActor extends Actor {
     var supervisor = self
     val resourceDir = s"$pwd/src/main/resources"
-
-    def receive = {
-
-        case DepGraph(id, name) =>{
-            val inputFile = s"$resourceDir/$id/$name.udb"
-            println(s"$resourceDir/$id/$name.udb")
-            // The Understand Database Resource file.
-            val dataBase:Database = Understand.open( inputFile )
-
-            // First, get a list of all classes, interfaces, or packages
-            val types:String = "method ~unknown ~unresolved"
-            // Generate the dependency graph using all methods defined internally
-            val pFiles:Array[Entity] = dataBase.ents(types)
-            var dependencyGraph: SimpleDirectedGraph[String, DefaultEdge] = new SimpleDirectedGraph[String, DefaultEdge](classOf[DefaultEdge])
-            pFiles.foreach( fileEntity =>
-                graphEntity(dependencyGraph, null, fileEntity, "callby", " ")
-            )
-        }
-    }
-
 
     /**
       * A recursive function, extracts the references found within the provided entity based on the kindstring
@@ -55,13 +35,42 @@ class DepGraphActor extends Actor {
             val parentName = parent.name
             graph.addEdge(parentName, entityName)
         }
-
         //        println(indent+entity.kind.name+"++"+entityName)
-
         typedRefs.foreach( ref => {
             graphEntity(graph, entity, ref.ent, kindString, "  "+indent)
         })
+    }
 
+    def receive = {
+
+        case DepGraph(id, name) =>{
+            println (s"Generating Dependency Graph for $id/$name")
+
+            val inputFile = s"$resourceDir/$id/$name.udb"
+
+            // The Understand Database Resource file.
+            val dataBase:Database = Understand.open( inputFile )
+
+            // The jGrapht Dependency Graph object.
+            var dependencyGraph: SimpleDirectedGraph[String, DefaultEdge] = new SimpleDirectedGraph[String, DefaultEdge](classOf[DefaultEdge])
+
+            // First, get a list of all classes, interfaces, or packages
+            val types:String = "method ~unknown ~unresolved"
+            // Generate the dependency graph using all methods defined internally
+            val pFiles:Array[Entity] = dataBase.ents(types)
+
+            println(s"Generating Dependency Graph now for $name.udb. Please wait....")
+            pFiles.foreach( fileEntity => {
+                println(fileEntity)
+                graphEntity(dependencyGraph, null, fileEntity, "callby", " ")
+                println(dependencyGraph)
+
+            })
+
+            // Give the sender what it wants!
+            sender ! DepGraphResult(dependencyGraph)
+
+        }
     }
 
 }

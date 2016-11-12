@@ -37,18 +37,13 @@ class JsonActor extends Actor {
             entity.dataBytes
                     .runFold(ByteString(""))(_++_)
                     .map(body => JsonResult(parse(body.utf8String)) )
-                    .pipeTo( sender() ) // send to supervisor
+                    .pipeTo( sender() ) // send to GithubApiActor (usually)
         }
 
         case resp @ HttpResponse(code, _, _, _) => {
             println("\nRequest failed, response code: " + code)
             resp.discardEntityBytes()
         }
-
-        // Shut Actor down
-        case PoisonPill =>
-            println(s"Good night! - ${self.path.name}")
-            context.stop(self)
 
 
         /* Used for Debugging Actors */
@@ -60,6 +55,7 @@ class JsonActor extends Actor {
         case Done(m) => println(s"${self.path.name}: $m")
 
         case _ => println(s"${self.path.name}: Hell if I know what it was?")
+
     }
 
 }

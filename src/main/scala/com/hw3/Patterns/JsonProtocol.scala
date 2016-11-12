@@ -12,10 +12,29 @@ import org.json4s.DefaultFormats
 
 
 object JsonProtocol {
+
     implicit val formats = DefaultFormats // Brings in default date formats etc.
 
     case class URL(path:Option[String])
     case class CloneURL(clone_url:String)
+
+
+    case class TreeResults(
+            sha: String,
+            url: String,
+            tree: List[Tree]
+    )
+
+
+    case class Tree(
+            path: String,
+            mode: String,
+            `type`: String,
+            sha: String,
+            size: Int,
+            url: String
+    )
+
 
     case class SearchResult(
             total_count: BigInt,

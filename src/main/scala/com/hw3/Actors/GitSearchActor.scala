@@ -12,7 +12,7 @@ import org.json4s._
   * Created by krbalmryde on 11/1/16.
   */
 
-class GitApiActor() extends Actor {
+class GitSearchActor() extends Actor {
     import akka.pattern.pipe
     import context.dispatcher
 
@@ -30,34 +30,33 @@ class GitApiActor() extends Actor {
 
         // Search Pattern; Denotes a request to make a query for Repos of the provided language
         // This will return a response to the master
-        case Search(lang) => {
+        case GitSearch(lang) => {
 
 //            val url = s"https://api.github.com/search/repositories?q=language:$lang+user:tobami+repo:littlechef+size:2344&sort=stars&order=desc"
             val url = s"https://api.github.com/search/repositories?q=language:$lang+size:3000&sort=stars&order=desc"
-            println(s"\n${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
+            println(s"\n${self.path.name}: -> ${sender.path}\n${sender.path.name}: Gave the Search signal. Making request for: $url")
 
             supervisor = sender
             http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))
                     .pipeTo( context.actorOf(Props[JsonActor], name = "jsonSearch") )
         }
 
-        case Commit(fullName) => {
+
+        case GitCommit(fullName) => {
             val url = s"https://api.github.com/repos/$fullName/contents"
             supervisor = sender
             http.singleRequest(HttpRequest(uri = url, headers = List(authorize)))
                     .pipeTo( context.actorOf(Props[JsonActor], name = "jsonSearch") )
-
         }
+
 
         // Get the resultant JSON from the child JsonActor. Stop the child actor and pass along the
         // resultant json data to the Supervisor
         case JsonResult(json) => {
-            println (s"${sender.path.name} sent us some $json")
+            println (s"\n${self.path.name}:->${sender.path.name} sent us some $json")
             sender() ! PoisonPill
             supervisor ! JsonResult(json)
         }
-
-
 
         case MyMessage(m) => {
             println(s"${self.toString}:I received the message: $m")
